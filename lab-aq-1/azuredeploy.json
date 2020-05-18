@@ -2,8 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "storageAccount": {
+        "storageAccountPrefix": {
             "type": "string",
+            "defaultValue": "aqlab1sa",
+            "maxLength": 9,
             "metadata": {
                 "description": "Name for the storage account made by Ata"
             }
@@ -22,15 +24,18 @@
         }
     },
     "functions": [],
-    "variables": {},
+    "variables": {
+        "storageAccount" : 
+            "[toLower(concat(parameters('storageAccountPrefix'), uniqueString(resourceGroup().id)))]"
+    },
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
-            "name": "[parameters('storageAccount')]",
+            "name": "[variables('storageAccount')]",
             "apiVersion": "2019-06-01",
             "location": "[resourceGroup().location]",
             "tags": {
-                "displayName": "[parameters('storageAccount')]"
+                "displayName": "[variables('storageAccount')]"
             },
             "kind": "StorageV2",
             "sku": {
